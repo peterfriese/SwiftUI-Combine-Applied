@@ -113,7 +113,7 @@ Distributed under the Apache 2 License. See `LICENSE` for more information.
 [issues-shield]: https://img.shields.io/github/issues/peterfriese/SwiftUI-Combine-Applied.svg?style=flat-square
 [issues-url]: https://github.com/peterfriese/SwiftUI-Combine-Applied/issues
 [license-shield]: https://img.shields.io/github/license/peterfriese/SwiftUI-Combine-Applied.svg?style=flat-square
-[license-url]: https://github.com/peterfriese/SwiftUI-Combine-Applied/blob/master/LICENSE.txt
+[license-url]: https://github.com/peterfriese/SwiftUI-Combine-Applied/blob/master/LICENSE
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/peterfriese
