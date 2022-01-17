@@ -12,7 +12,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/peterfriese/SwiftUI-Combine-Applied">
-    <img src="swift-logo-512" alt="Logo">
+    <img src="images/swift-logo-512.png" alt="Logo">
   </a>
 
   <h1 align="center">SwiftUI & Combine Applied</h1>
