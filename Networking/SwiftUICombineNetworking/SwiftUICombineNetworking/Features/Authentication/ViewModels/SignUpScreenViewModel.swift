@@ -26,7 +26,7 @@ private lazy var isUsernameAvailablePublisher: AnyPublisher<Bool, Never> = {
     .removeDuplicates()
     .print("username")
     .flatMap { username -> AnyPublisher<Bool, Never> in
-      self.authenticationService.checkUserNameAvailable(userName: username)
+      self.authenticationService.checkUserNameAvailablePublisher(userName: username)
     }
     .receive(on: DispatchQueue.main)
     .share()
