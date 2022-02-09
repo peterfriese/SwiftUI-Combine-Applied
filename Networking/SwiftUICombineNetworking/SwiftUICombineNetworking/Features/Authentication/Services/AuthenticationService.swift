@@ -14,12 +14,23 @@ struct UserNameAvailableMessage: Codable {
   var userName: String
 }
 
+struct APIErrorMessage: Decodable {
+  var error: Bool
+  var reason: String
+}
+
 enum APIError: LocalizedError {
   /// Invalid request, e.g. invalid URL
   case invalidRequestError(String)
   
   /// Indicates an error on the transport layer, e.g. not being able to connect to the server
   case transportError(Error)
+  
+  /// Received an invalid response, e.g. non-HTTP result
+  case invalidResponse
+  
+  /// Server-side validation error
+  case validationError(String)
 }
 
 struct AuthenticationService {
@@ -31,9 +42,32 @@ struct AuthenticationService {
     }
     
     return URLSession.shared.dataTaskPublisher(for: url)
+      // handle URL errors (most likely not able to connect to the server)
       .mapError { error -> Error in
         return APIError.transportError(error)
       }
+    
+      // handle all other errors
+      .tryMap { (data, response) -> (data: Data, response: URLResponse) in
+        print("Received response from server, now checking status code")
+        
+        guard let urlResponse = response as? HTTPURLResponse else {
+          throw APIError.invalidResponse
+        }
+        
+        if (200..<300) ~= urlResponse.statusCode {
+        }
+        else {
+          let decoder = JSONDecoder()
+          let apiError = try decoder.decode(APIErrorMessage.self, from: data)
+          
+          if urlResponse.statusCode == 400 {
+            throw APIError.validationError(apiError.reason)
+          }
+        }
+        return (data, response)
+      }
+
       .map(\.data)
       .decode(type: UserNameAvailableMessage.self, decoder: JSONDecoder())
       .map(\.isAvailable)

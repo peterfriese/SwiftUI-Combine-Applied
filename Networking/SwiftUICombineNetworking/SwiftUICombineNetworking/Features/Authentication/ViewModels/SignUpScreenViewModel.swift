@@ -53,6 +53,9 @@ class SignUpScreenViewModel: ObservableObject {
           if case APIError.transportError(_) = error {
             return ""
           }
+          else if case APIError.validationError(let reason) = error {
+            return reason
+          }
           else {
             return error.localizedDescription
           }
