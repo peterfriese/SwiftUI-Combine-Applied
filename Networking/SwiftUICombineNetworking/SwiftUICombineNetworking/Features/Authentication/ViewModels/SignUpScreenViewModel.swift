@@ -29,6 +29,7 @@ class SignUpScreenViewModel: ObservableObject {
   // MARK: Output
   @Published var usernameMessage: String = ""
   @Published var isValid: Bool = false
+  @Published var showUpdateDialog: Bool = false
   
   private var authenticationService = AuthenticationService()
   
@@ -79,6 +80,17 @@ class SignUpScreenViewModel: ObservableObject {
         return true
       }
       .assign(to: &$isValid)
-
+    
+    // decoding error: display an error message suggesting to download a newer version
+    isUsernameAvailablePublisher
+      .map { result in
+        if case .failure(let error) = result {
+          if case APIError.decodingError = error {
+            return true
+          }
+        }
+        return false
+      }
+      .assign(to: &$showUpdateDialog)
   }
 }

@@ -31,6 +31,24 @@ enum APIError: LocalizedError {
   
   /// Server-side validation error
   case validationError(String)
+  
+  /// The server sent data in an unexpected format
+  case decodingError(Error)
+
+  var errorDescription: String? {
+    switch self {
+    case .invalidRequestError(let message):
+      return "Invalid request: \(message)"
+    case .transportError(let error):
+      return "Transport error: \(error)"
+    case .invalidResponse:
+      return "Invalid response"
+    case .validationError(let reason):
+      return "Validation Error: \(reason)"
+    case .decodingError:
+      return "The server returned data in an unexpected format. Try updating the app."
+    }
+  }
 }
 
 struct AuthenticationService {
@@ -69,7 +87,16 @@ struct AuthenticationService {
       }
 
       .map(\.data)
-      .decode(type: UserNameAvailableMessage.self, decoder: JSONDecoder())
+//      .decode(type: UserNameAvailableMessage.self, decoder: JSONDecoder())
+      .tryMap { data -> UserNameAvailableMessage in
+        let decoder = JSONDecoder()
+        do {
+          return try decoder.decode(UserNameAvailableMessage.self, from: data)
+        }
+        catch {
+          throw APIError.decodingError(error)
+        }
+      }
       .map(\.isAvailable)
 //      .replaceError(with: false)
       .eraseToAnyPublisher()
