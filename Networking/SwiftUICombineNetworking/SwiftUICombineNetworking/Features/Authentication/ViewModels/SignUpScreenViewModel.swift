@@ -20,19 +20,23 @@ class SignUpScreenViewModel: ObservableObject {
   
   private var authenticationService = AuthenticationService()
   
-private lazy var isUsernameAvailablePublisher: AnyPublisher<Bool, Never> = {
-  $username
-    .debounce(for: 0.8, scheduler: DispatchQueue.main)
-    .removeDuplicates()
-    .print("username")
-    .flatMap { username -> AnyPublisher<Bool, Never> in
-      self.authenticationService.checkUserNameAvailablePublisher(userName: username)
-    }
-    .receive(on: DispatchQueue.main)
-    .share()
-    .print("share")
-    .eraseToAnyPublisher()
-}()
+  private lazy var isUsernameAvailablePublisher: AnyPublisher<Bool, Never> = {
+    $username
+      .debounce(for: 0.8, scheduler: DispatchQueue.main)
+      .removeDuplicates()
+      .print("username")
+      .flatMap { username in
+        self.authenticationService.checkUserNameAvailablePublisher(userName: username)
+          .catch { error in
+            return Just(false)
+          }
+          .eraseToAnyPublisher()
+      }
+      .receive(on: DispatchQueue.main)
+      .share()
+      .print("share")
+      .eraseToAnyPublisher()
+  }()
   
   init() {
     isUsernameAvailablePublisher

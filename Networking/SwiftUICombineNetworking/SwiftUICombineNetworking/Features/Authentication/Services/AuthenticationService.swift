@@ -14,18 +14,24 @@ struct UserNameAvailableMessage: Codable {
   var userName: String
 }
 
-struct AuthenticationService {
+enum APIError: LocalizedError {
+  /// Invalid request, e.g. invalid URL
+  case invalidRequestError(String)
+}
 
-  func checkUserNameAvailablePublisher(userName: String) -> AnyPublisher<Bool, Never> {
+struct AuthenticationService {
+  
+  func checkUserNameAvailablePublisher(userName: String) -> AnyPublisher<Bool, Error> {
     guard let url = URL(string: "http://127.0.0.1:8080/isUserNameAvailable?userName=\(userName)") else {
-      return Just(false).eraseToAnyPublisher()
+      return Fail(error: APIError.invalidRequestError("URL invalid"))
+        .eraseToAnyPublisher()
     }
     
     return URLSession.shared.dataTaskPublisher(for: url)
       .map(\.data)
       .decode(type: UserNameAvailableMessage.self, decoder: JSONDecoder())
       .map(\.isAvailable)
-      .replaceError(with: false)
+//      .replaceError(with: false)
       .eraseToAnyPublisher()
   }
   
