@@ -46,11 +46,36 @@ class SignUpScreenViewModel: ObservableObject {
   }()
   
   init() {
-//    isUsernameAvailablePublisher
-//      .assign(to: &$isValid)
-//
-//    isUsernameAvailablePublisher
-//      .map { $0 ? "" : "Username not available. Try a different one."}
-//      .assign(to: &$usernameMessage)
+    isUsernameAvailablePublisher
+      .map { result in
+        switch result {
+        case .failure(let error):
+          if case APIError.transportError(_) = error {
+            return ""
+          }
+          else {
+            return error.localizedDescription
+          }
+        case .success(let isAvailable):
+          return isAvailable ? "" : "This username is not available"
+        }
+      }
+      .assign(to: &$usernameMessage)
+    
+    isUsernameAvailablePublisher
+      .map { result in
+        if case .failure(let error) = result {
+          if case APIError.transportError(_) = error {
+            return true
+          }
+          return false
+        }
+        if case .success(let isAvailable) = result {
+          return isAvailable
+        }
+        return true
+      }
+      .assign(to: &$isValid)
+
   }
 }

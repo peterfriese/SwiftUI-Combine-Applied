@@ -17,6 +17,9 @@ struct UserNameAvailableMessage: Codable {
 enum APIError: LocalizedError {
   /// Invalid request, e.g. invalid URL
   case invalidRequestError(String)
+  
+  /// Indicates an error on the transport layer, e.g. not being able to connect to the server
+  case transportError(Error)
 }
 
 struct AuthenticationService {
@@ -28,6 +31,9 @@ struct AuthenticationService {
     }
     
     return URLSession.shared.dataTaskPublisher(for: url)
+      .mapError { error -> Error in
+        return APIError.transportError(error)
+      }
       .map(\.data)
       .decode(type: UserNameAvailableMessage.self, decoder: JSONDecoder())
       .map(\.isAvailable)
