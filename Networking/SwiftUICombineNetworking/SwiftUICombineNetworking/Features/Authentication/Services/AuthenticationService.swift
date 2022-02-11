@@ -108,6 +108,7 @@ struct AuthenticationService {
           throw APIError.decodingError(error)
         }
       }
+      .retry(3)
       .map(\.isAvailable)
 //      .replaceError(with: false)
       .eraseToAnyPublisher()
