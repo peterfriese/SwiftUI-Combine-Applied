@@ -34,6 +34,9 @@ enum APIError: LocalizedError {
   
   /// The server sent data in an unexpected format
   case decodingError(Error)
+  
+  /// General server-side error. If `retryAfter` is set, the client can send the same request after the given time.
+  case serverError(statusCode: Int, reason: String? = nil, retryAfter: String? = nil)
 
   var errorDescription: String? {
     switch self {
@@ -47,6 +50,8 @@ enum APIError: LocalizedError {
       return "Validation Error: \(reason)"
     case .decodingError:
       return "The server returned data in an unexpected format. Try updating the app."
+    case .serverError(let statusCode, let reason, let retryAfter):
+      return "Server error with code \(statusCode), reason: \(reason ?? "no reason given"), retry after: \(retryAfter ?? "no retry after provided")"
     }
   }
 }
@@ -82,6 +87,12 @@ struct AuthenticationService {
           if urlResponse.statusCode == 400 {
             throw APIError.validationError(apiError.reason)
           }
+          
+          if (500..<600) ~= urlResponse.statusCode {
+            let retryAfter = urlResponse.value(forHTTPHeaderField: "Retry-After")
+            throw APIError.serverError(statusCode: urlResponse.statusCode, reason: apiError.reason, retryAfter: retryAfter)
+          }
+
         }
         return (data, response)
       }

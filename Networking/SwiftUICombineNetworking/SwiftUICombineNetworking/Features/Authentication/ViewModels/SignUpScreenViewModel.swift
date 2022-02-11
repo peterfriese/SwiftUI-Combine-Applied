@@ -57,6 +57,9 @@ class SignUpScreenViewModel: ObservableObject {
           else if case APIError.validationError(let reason) = error {
             return reason
           }
+          else if case APIError.serverError(statusCode: _, reason: let reason, retryAfter: _) = error {
+            return reason ?? "Server error"
+          }
           else {
             return error.localizedDescription
           }
