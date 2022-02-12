@@ -64,7 +64,7 @@ struct AuthenticationService {
         .eraseToAnyPublisher()
     }
     
-    return URLSession.shared.dataTaskPublisher(for: url)
+    let dataTaskPublisher = URLSession.shared.dataTaskPublisher(for: url)
       // handle URL errors (most likely not able to connect to the server)
       .mapError { error -> Error in
         return APIError.transportError(error)
@@ -97,6 +97,20 @@ struct AuthenticationService {
         return (data, response)
       }
 
+    return dataTaskPublisher
+      .tryCatch { error -> AnyPublisher<(data: Data, response: URLResponse), Error> in
+        if case APIError.serverError = error {
+          return Just(Void())
+            .delay(for: 3, scheduler: DispatchQueue.global())
+            .flatMap { _ in
+              return dataTaskPublisher
+            }
+            .print("before retry")
+            .retry(10)
+            .eraseToAnyPublisher()
+        }
+        throw error
+      }
       .map(\.data)
 //      .decode(type: UserNameAvailableMessage.self, decoder: JSONDecoder())
       .tryMap { data -> UserNameAvailableMessage in
@@ -108,7 +122,6 @@ struct AuthenticationService {
           throw APIError.decodingError(error)
         }
       }
-      .retry(3)
       .map(\.isAvailable)
 //      .replaceError(with: false)
       .eraseToAnyPublisher()

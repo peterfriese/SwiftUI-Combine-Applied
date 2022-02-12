@@ -66,6 +66,8 @@ extension UsernameError: AbortError {
   }
 }
 
+var maintenanceCounter: Int = 0
+
 func routes(_ app: Application) throws {
   app.get { req in
     return "It works!"
@@ -103,10 +105,23 @@ func routes(_ app: Application) throws {
     }
     
     // simulate a non-permanent internal server error: database corrupted
-    // TODO: make sure this resolves after being called 3 times in a row
     if userName == "maintenance" {
+      maintenanceCounter += 1
+      print("Maintenance counter: \(maintenanceCounter)")
+      if maintenanceCounter % 3 != 0 {
+        print("... throwing maintenance error")
+        throw InternalServerError.maintenance
+      }
+      else {
+        print("... NOT throwing maintenance error")
+      }
+    }
+    
+    // simulate a non-permanent internal server error: database corrupted
+    if userName == "maintenance!" {
       throw InternalServerError.maintenance
     }
+
 
     // simulate decoding error by sending a response that has fewer fields than the client expects
     if userName == "illegalresponse" {

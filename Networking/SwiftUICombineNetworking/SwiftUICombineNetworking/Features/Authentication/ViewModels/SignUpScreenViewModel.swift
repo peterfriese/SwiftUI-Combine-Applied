@@ -37,15 +37,18 @@ class SignUpScreenViewModel: ObservableObject {
     $username
       .debounce(for: 0.8, scheduler: DispatchQueue.main)
       .removeDuplicates()
+      .print("username")
       .flatMap { username -> AnyPublisher<Available, Never> in
         self.authenticationService.checkUserNameAvailablePublisher(userName: username)
           .asResult()
       }
       .receive(on: DispatchQueue.main)
+      .print("before share")
       .share()
+      .print("share")
       .eraseToAnyPublisher()
   }()
-  
+
   init() {
     isUsernameAvailablePublisher
       .map { result in
