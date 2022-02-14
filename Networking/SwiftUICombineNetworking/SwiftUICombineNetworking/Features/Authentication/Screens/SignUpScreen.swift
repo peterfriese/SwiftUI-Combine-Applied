@@ -33,6 +33,17 @@ struct SignUpScreen: View {
         .disabled(!viewModel.isValid)
       }
     }
+    
+    // show update dialog
+    .alert("Please update", isPresented: $viewModel.showUpdateDialog, actions: {
+      Button("Upgrade") {
+        // open App Store listing page for the app
+      }
+      Button("Not now", role: .cancel) { }
+    }, message: {
+      Text("It looks like you're using an older version of this app. Please update your app.")
+    })
+
   }
 }
 
