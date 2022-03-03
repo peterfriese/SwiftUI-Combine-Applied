@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		881F285C27D0AD280039229C /* Publisher+Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F285B27D0AD280039229C /* Publisher+Retry.swift */; };
+		881F285E27D0B1210039229C /* Publisher+Dump.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F285D27D0B1210039229C /* Publisher+Dump.swift */; };
 		88D95B6E2786F8C6000F595B /* SwiftUICombineNetworkingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D95B6D2786F8C6000F595B /* SwiftUICombineNetworkingApp.swift */; };
 		88D95B722786F8C7000F595B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88D95B712786F8C7000F595B /* Assets.xcassets */; };
 		88D95B752786F8C7000F595B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88D95B742786F8C7000F595B /* Preview Assets.xcassets */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		881F285B27D0AD280039229C /* Publisher+Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Retry.swift"; sourceTree = "<group>"; };
+		881F285D27D0B1210039229C /* Publisher+Dump.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Dump.swift"; sourceTree = "<group>"; };
 		88D95B6A2786F8C6000F595B /* SwiftUICombineNetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUICombineNetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88D95B6D2786F8C6000F595B /* SwiftUICombineNetworkingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUICombineNetworkingApp.swift; sourceTree = "<group>"; };
 		88D95B712786F8C7000F595B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -36,6 +40,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		881F285A27D0AD080039229C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				881F285B27D0AD280039229C /* Publisher+Retry.swift */,
+				881F285D27D0B1210039229C /* Publisher+Dump.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		88D95B612786F8C6000F595B = {
 			isa = PBXGroup;
 			children = (
@@ -55,6 +68,7 @@
 		88D95B6C2786F8C6000F595B /* SwiftUICombineNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				881F285A27D0AD080039229C /* Extensions */,
 				88D95B802786FA30000F595B /* Features */,
 				88D95B6D2786F8C6000F595B /* SwiftUICombineNetworkingApp.swift */,
 				88D95B712786F8C7000F595B /* Assets.xcassets */,
@@ -184,6 +198,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				88D95B872786FAB4000F595B /* SignUpScreenViewModel.swift in Sources */,
+				881F285C27D0AD280039229C /* Publisher+Retry.swift in Sources */,
+				881F285E27D0B1210039229C /* Publisher+Dump.swift in Sources */,
 				88D95B852786FA71000F595B /* AuthenticationService.swift in Sources */,
 				88D95B6E2786F8C6000F595B /* SwiftUICombineNetworkingApp.swift in Sources */,
 				88D95B7E2786F966000F595B /* SignUpScreen.swift in Sources */,
